@@ -13,12 +13,15 @@ st.set_page_config(page_title="AnesSecurity - Hacker Portal", page_icon="🛡️
 # --- حقن تصميم الـ CSS (إخفاء أزرار Streamlit وعمل طابع الهاكرز) ---
 st.markdown("""
     <style>
-    /* إخفاء أيقونات وقائمة Streamlit العائمة في أسفل الصفحة والشاشة */
+    /* إخفاء أيقونات وقائمة Streamlit العائمة */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    .stDeployButton {display:none;}
     header {visibility: hidden;}
+    .stDeployButton {display:none;}
+    div[data-testid="stToolbar"] {visibility: hidden;}
     div[data-testid="stDecoration"] {visibility: hidden;}
+    div[data-testid="stStatusWidget"] {visibility: hidden;}
+    #stDecoration {display:none;}
 
     .stApp {
         background-color: #0b0f0c;
