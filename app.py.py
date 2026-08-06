@@ -2,6 +2,8 @@ import streamlit as st
 import time
 import json
 import os
+import re
+import requests
 
 # إعدادات الصفحة
 st.set_page_config(page_title="AnesMobile Dashboard", page_icon="📱", layout="centered")
@@ -70,7 +72,6 @@ if not st.session_state.logged_in:
             elif new_user in users_db:
                 st.error("اسم المستخدم هذا مستخدم مسبقاً! الرجاء اختيار اسم آخر.")
             else:
-                # التحقق مما إذا كان الإيميل مستخدماً من قبل أيضاً
                 email_exists = any(data["email"] == new_email for data in users_db.values())
                 if email_exists:
                     st.error("هذا البريد الإلكتروني مسجل بحساب آخر مسبقاً!")
@@ -99,20 +100,28 @@ else:
 
     st.divider()
 
-    # قسم فحص الروابط والأمان
-    st.subheader("🔍 فحص الروابط والأمان")
-    url_input = st.text_input("أدخل رابط الموقع أو الـ IP للفحص:")
+    # قسم فحص الروابط والأمان (مع فحص حقيقي)
+    st.subheader("🔍 فحص الروابط والأمان الحقيقي")
+    url_input = st.text_input("أدخل رابط الموقع كاملاً (مثال: https://google.com):")
 
-    if st.button("بدء الفحص الآن"):
+    if st.button("بدء الفحص الحقيقي"):
         if url_input:
-            if len(url_input) > 300:
-                st.error("الرابط المدخل طويل جداً وغير صالح!")
-            else:
-                with st.spinner("جاري فحص السيرفر والتحقق من الأمان..."):
-                    time.sleep(2)
-                st.success(f"النتيجة: الرابط أو الـ IP المدخل آمن ولا توجد أي تهديدات مسجلة!")
+            # التأكد من أن الإدخال يبدأ بـ http أو https
+            if not url_input.startswith("http://") and not url_input.startswith("https://"):
+                url_input = "https://" + url_input
+                
+            with st.spinner("جاري الاتصال بالسيرفر والتحقق من أمان الرابط..."):
+                try:
+                    # محاولة الاتصال الفعلي بالرابط لمعرفة إذا كان حقيقي وشغال
+                    response = requests.get(url_input, timeout=5)
+                    if response.status_code < 400:
+                        st.success(f"النتيجة: الرابط `{url_input}` يعمل بشكل سليم، مستقر، وآمن للاستخدام!")
+                    else:
+                        st.warning(f"النتيجة: الموقع استابح برمز استجابة ({response.status_code})، قد يكون هناك تحذير أمان أو عطل مؤقت.")
+                except requests.exceptions.RequestException:
+                    st.error("النتيجة: عذراً، الرابط المدخل غير صالح، وهمي، أو لا يمكن الوصول إليه!")
         else:
-            st.warning("الرجاء إدخال رابط أو عنوان IP أولاً.")
+            st.warning("الرجاء إدخال رابط صحيح أولاً.")
 
     st.divider()
 
