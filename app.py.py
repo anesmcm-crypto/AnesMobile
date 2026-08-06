@@ -1,34 +1,90 @@
 import streamlit as st
 import time
+import json
+import os
 
 # إعدادات الصفحة
 st.set_page_config(page_title="AnesMobile Dashboard", page_icon="📱", layout="centered")
 
-# نظام تسجيل الدخول أو إدخال البريد للترحيب بالمستخدم
-if "user_email" not in st.session_state:
-    st.session_state.user_email = ""
+# ملف تخزين بيانات المستخدمين محلياً في المستودع
+DB_FILE = "users_db.json"
 
-# إذا ما زال ما دخلش الإيميل، نعرضوله واجهة تسجيل دخول بسيطة
-if not st.session_state.user_email:
-    st.title("🔐 مرحباً بك في AnesMobile")
-    st.write("الرجاء إدخال بريدك الإلكتروني أو اسمك للوصول إلى لوحة التحكم:")
+def load_users():
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except:
+                return {}
+    return {}
+
+def save_users(users):
+    with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, ensure_ascii=False, indent=4)
+
+# تهيئة الجلسة
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
+
+users_db = load_users()
+
+# --- إذا لم يكن المستخدم مسجلاً الدخول ---
+if not st.session_state.logged_in:
+    st.title("🔐 AnesMobile - بوابة الأمان")
     
-    with st.form("login_form"):
-        entered_input = st.text_input("البريد الإلكتروني أو الاسم:")
-        submit_button = st.form_submit_button("دخول للموقع")
+    tab1, tab2 = st.tabs(["تسجيل الدخول", "إنشاء حساب جديد"])
+    
+    # 1. نافذة تسجيل الدخول
+    with tab1:
+        st.subheader("تسجيل الدخول إلى حسابك")
+        login_user = st.text_input("اسم المستخدم أو البريد الإلكتروني:", key="login_u")
+        login_pass = st.text_input("كلمة المرور:", type="password", key="login_p")
         
-        if submit_button:
-            if entered_input:
-                st.session_state.user_email = entered_input
-                st.rerun() # إعادة تحميل الصفحة باش تتفعل اللوحة باسمه
+        if st.button("دخول"):
+            found = False
+            for u, data in users_db.items():
+                if (u == login_user or data["email"] == login_user) and data["password"] == login_pass:
+                    found = True
+                    st.session_state.logged_in = True
+                    st.session_state.username = u
+                    st.success(f"مرحباً بك مجدداً، {u}!")
+                    time.sleep(1)
+                    st.rerun()
+            if not found:
+                st.error("اسم المستخدم أو كلمة المرور غير صحيحة!")
+
+    # 2. نافذة إنشاء حساب جديد (مع التحقق من تفرد اسم المستخدم)
+    with tab2:
+        st.subheader("إنشاء حساب جديد")
+        new_email = st.text_input("البريد الإلكتروني (Gmail):")
+        new_user = st.text_input("اسم المستخدم (فريد ولا يتكرر):")
+        new_pass = st.text_input("كلمة المرور:", type="password")
+        
+        if st.button("تسجيل الحساب"):
+            if not new_email or not new_user or not new_pass:
+                st.warning("الرجاء ملء جميع الحقول!")
+            elif "@" not in new_email:
+                st.error("الرجاء إدخال بريد إلكتروني صحيح!")
+            elif new_user in users_db:
+                st.error("اسم المستخدم هذا مستخدم مسبقاً! الرجاء اختيار اسم آخر.")
             else:
-                st.error("الرجاء إدخال معلومة صحيحة للمتابعة.")
-                
+                # التحقق مما إذا كان الإيميل مستخدماً من قبل أيضاً
+                email_exists = any(data["email"] == new_email for data in users_db.values())
+                if email_exists:
+                    st.error("هذا البريد الإلكتروني مسجل بحساب آخر مسبقاً!")
+                else:
+                    users_db[new_user] = {
+                        "email": new_email,
+                        "password": new_pass
+                    }
+                    save_users(users_db)
+                    st.success("تم إنشاء الحساب بنجاح! يمكنك الانتقال لتبويب تسجيل الدخول والدخول الآن.")
+
 else:
-    # --- الواجهة الرئيسية للموقع بعد تسجيل الدخول ---
-    
-    # استخراج اسم المستخدم أو الإيميل للترحيب به
-    current_user = st.session_state.user_email
+    # --- الواجهة الرئيسية بعد تسجيل الدخول بنجاح ---
+    current_user = st.session_state.username
     
     st.title(f"🛡️ AnesMobile - أهلاً بك، {current_user}")
     st.write("هذه لوحة تحكم حماية الهاتف الخاصة بك.")
@@ -65,10 +121,11 @@ else:
     if st.button("تنظيف ذاكرة التخزين المؤقت (Cache)"):
         st.toast("تم تنظيف الذاكرة بنجاح!", icon="🧹")
 
-    # زر الخروج أو تبديل الحساب
+    # زر تسجيل الخروج
     st.markdown("---")
-    if st.button("تسجيل الخروج / تغيير الحساب"):
-        st.session_state.user_email = ""
+    if st.button("تسجيل الخروج"):
+        st.session_state.logged_in = False
+        st.session_state.username = ""
         st.rerun()
 
     # حقوق التطبيق في الأسفل
