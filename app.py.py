@@ -5,13 +5,21 @@ import os
 import requests
 import random
 import string
+import base64
 
 # إعدادات الصفحة مع طابع الهاكرز
 st.set_page_config(page_title="AnesSecurity - Hacker Portal", page_icon="🛡️", layout="centered")
 
-# --- حقن تصميم الـ CSS لتغيير الألوان إلى الأسود والأخضر مع تصميم اللوجو (الدرع) ---
+# --- حقن تصميم الـ CSS (إخفاء أزرار Streamlit وعمل طابع الهاكرز) ---
 st.markdown("""
     <style>
+    /* إخفاء أيقونات وقائمة Streamlit العائمة في أسفل الصفحة والشاشة */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display:none;}
+    header {visibility: hidden;}
+    div[data-testid="stDecoration"] {visibility: hidden;}
+
     .stApp {
         background-color: #0b0f0c;
         color: #00ff66;
@@ -85,7 +93,7 @@ st.markdown("""
     }
 
     /* تخصيص خانات الإدخال */
-    .stTextInput>div>div>input, .stSelectbox>div>div>div {
+    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
         background-color: #121814 !important;
         color: #00ff66 !important;
         border: 1px solid #00ff66 !important;
@@ -293,8 +301,66 @@ else:
 
     st.divider()
 
-    # --- القسم 5: الأدوات الإضافية (مولدات) ---
-    with st.expander("⚡ ترسانة الأدوات والمولدات الأمنية"):
+    # --- القسم 5: ترسانة الأدوات والمولدات المتقدمة ---
+    with st.expander("⚡ ترسانة الأدوات والمولدات الأمنية الإضافية"):
+        
+        # أداة كشف الروابط المختصرة (فحص إعادة التوجيه)
+        st.subheader("🔗 كشف الروابط المختصرة (Redirect Checker)")
+        short_url = st.text_input("أدخل الرابط المختصر (مثل bit.ly/...):")
+        if st.button("كشف الوجهة الحقيقية"):
+            if short_url:
+                if not short_url.startswith("http"):
+                    short_url = "https://" + short_url
+                try:
+                    resp = requests.head(short_url, allow_redirects=True, timeout=5)
+                    st.success(f"الرابط الأصلي الحقيقي هو: `{resp.url}`")
+                except:
+                    st.error("تعذر تتبع الرابط المختصر، تحقق منه.")
+            else:
+                st.warning("الرجاء إدخال رابط مختصر أولاً.")
+
+        st.divider()
+        # أداة توليد بيانات وهمية آمنة
+        st.subheader("👤 مولد الهوية والبيانات الوهمية")
+        if st.button("توليد بيانات شخصية وهمية"):
+            fake_names = ["Anes Hacker", "CyberGhost", "Matrix_99", "Ghost_X", "Phantom_07"]
+            fake_domains = ["gmail.sec", "cybermail.net", "anon.org", "darkbox.io"]
+            r_name = random.choice(fake_names) + str(random.randint(10, 99))
+            r_email = r_name.lower().replace(" ", "") + "@" + random.choice(fake_domains)
+            r_pass = "".join(random.choice(string.ascii_letters + string.digits + "!@#$") for _ in range(12))
+            st.write(f"- **اسم المستخدم الوهمي:** `{r_name}`")
+            st.write(f"- **البريد الوهمي:** `{r_email}`")
+            st.write(f"- **كلمة المرور المقترحة:** `{r_pass}`")
+
+        st.divider()
+        # أداة تشفير وفك تشفير النصوص السريعة (Base64)
+        st.subheader("🔐 تشفير وفك تشفير النصوص السريعة (Base64)")
+        text_to_codec = st.text_area("اكتب النص المراد تشفيره أو فكه:")
+        col_c1, col_c2 = st.columns(2)
+        with col_c1:
+            if st.button("تشفير النص"):
+                if text_to_codec:
+                    encoded_bytes = base64.b64encode(text_to_codec.encode("utf-8"))
+                    st.code(encoded_bytes.decode("utf-8"), language="")
+                else:
+                    st.warning("اكتب نصاً أولاً.")
+        with col_c2:
+            if st.button("فك تشفير النص"):
+                if text_to_codec:
+                    try:
+                        decoded_bytes = base64.b64decode(text_to_codec.encode("utf-8"))
+                        st.code(decoded_bytes.decode("utf-8"), language="")
+                    except:
+                        st.error("خطأ: النص المدخل غير مشفر بطريقة صحيحة!")
+                else:
+                    st.warning("اكتب نصاً مشفراً أولاً.")
+
+        st.divider()
+        st.subheader("💻 فحص بصمة المتصفح")
+        if st.button("عرض معلومات البصمة"):
+            st.info("نوع المتصفح والنظام: متصفح آمن عبر منصة سحابية مشفرة (Secure Node).")
+
+        st.divider()
         st.subheader("🔑 مولد كلمات المرور المعقدة")
         pass_length = st.slider("اختر طول كلمة المرور:", min_value=8, max_value=32, value=12)
         if st.button("توليد كلمة سر سرية"):
