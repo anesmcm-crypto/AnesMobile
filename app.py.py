@@ -10,7 +10,7 @@ import base64
 # إعدادات الصفحة
 st.set_page_config(page_title="AnesSecurity - Hacker Portal", page_icon="🛡️", layout="centered")
 
-# --- كود الـ CSS المدمج (إخفاء الخلفية السوداء + التصميم الكامل) ---
+# --- كود الـ CSS المحسن لقص الخلفية وجعلها دائرية متوهجة ---
 st.markdown("""
     <style>
     /* إخفاء عناصر Streamlit */
@@ -24,19 +24,21 @@ st.markdown("""
     
     .cyber-logo-box { display: flex; align-items: center; justify-content: center; margin: 10px auto 20px auto; }
     
-    /* السحر هنا: إزالة الخلفية السوداء وتوهج الدرع */
+    /* جعل الصورة دائرية بقص الأطراف وتوهجها لإنهاء مشكلة المربع */
     .cyber-logo-img {
-        width: 220px;
-        height: auto;
-        mix-blend-mode: screen; 
-        filter: drop-shadow(0 0 15px #00ff66) drop-shadow(0 0 30px #00ff66);
+        width: 190px;
+        height: 190px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #00ff66;
+        box-shadow: 0 0 20px #00ff66, inset 0 0 15px #00ff66;
         animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-        0% { transform: scale(1); opacity: 0.9; }
-        50% { transform: scale(1.03); opacity: 1; }
-        100% { transform: scale(1); opacity: 0.9; }
+        0% { transform: scale(1); box-shadow: 0 0 15px #00ff66; }
+        50% { transform: scale(1.03); box-shadow: 0 0 30px #00ff66; }
+        100% { transform: scale(1); box-shadow: 0 0 15px #00ff66; }
     }
 
     .stButton>button { background-color: #000000 !important; color: #00ff66 !important; border: 2px solid #00ff66 !important; border-radius: 8px; font-weight: bold; width: 100%; transition: all 0.3s ease; }
@@ -63,7 +65,7 @@ if "logged_in" not in st.session_state: st.session_state.logged_in = False
 if "username" not in st.session_state: st.session_state.username = ""
 users_db = load_users()
 
-# عرض الشعار
+# عرض الشعار بالشكل الدائري الجديد
 try:
     with open("logo.png", "rb") as image_file:
         encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
@@ -85,7 +87,6 @@ if not st.session_state.logged_in:
                 st.rerun()
             else: st.error("بيانات خاطئة!")
     with tab2:
-        # كود تسجيل الحساب...
         pass
 else:
     st.title(f"⚡ Welcome Agent: {st.session_state.username}")
