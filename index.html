@@ -3,133 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnesMobile - إنشاء حساب</title>
+    <title>AnesSecurity - Hacker Portal</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #0f172a;
+            background-color: #0b0f19;
             color: #ffffff;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            justify-content: center;
+            min-height: 100vh;
             margin: 0;
         }
+        .install-banner {
+            background-color: #00ff66;
+            color: #000;
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0,255,102,0.5);
+        }
+        .logo-container {
+            border: 2px solid #00ff66;
+            box-shadow: 0 0 15px #00ff66;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 20px;
+            background-color: #111827;
+        }
+        .logo-container h2 {
+            color: #00ff66;
+            margin: 10px 0 0 0;
+            text-shadow: 0 0 10px #00ff66;
+        }
+        .shield-icon {
+            font-size: 40px;
+        }
         .card {
-            background-color: #1e293b;
+            background-color: #111827;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border-radius: 15px;
+            border: 2px solid #00ff66;
+            box-shadow: 0 0 20px rgba(0,255,102,0.3);
             width: 100%;
             max-width: 400px;
-        }
-        h2 {
             text-align: center;
-            color: #38bdf8;
+        }
+        h3 {
+            color: #00ff66;
             margin-bottom: 20px;
         }
         .input-group {
             margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
+            text-align: right;
         }
         input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #475569;
-            background-color: #0f172a;
-            color: #fff;
-            border-radius: 6px;
+            padding: 12px;
+            border: 1px solid #00ff66;
+            background-color: #0b0f19;
+            color: #00ff66;
+            border-radius: 8px;
             box-sizing: border-box;
+            outline: none;
+        }
+        input::placeholder {
+            color: #008833;
+        }
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
         }
         button {
-            width: 100%;
             padding: 12px;
-            background-color: #22c55e;
-            color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 15px;
             cursor: pointer;
             font-weight: bold;
-            margin-top: 10px;
         }
-        button:hover {
-            background-color: #16a34a;
+        .btn-login {
+            background-color: #00ff66;
+            color: #000;
+            box-shadow: 0 0 10px rgba(0,255,102,0.4);
         }
-        #message {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
+        .btn-login:hover {
+            background-color: #00cc52;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>إنشاء حساب جديد</h2>
-        <div class="input-group">
-            <label>البريد الإلكتروني</label>
-            <input type="email" id="email" placeholder="example@gmail.com">
-        </div>
-        <div class="input-group">
-            <label>كلمة المرور</label>
-            <input type="password" id="password" placeholder="********">
-        </div>
-        <button id="registerBtn">تسجيل حساب</button>
-        <p id="message"></p>
+    <div class="install-banner">
+        📱 تثبيت تطبيق AnesSecurity على جهازك
     </div>
 
-    <!-- كود فايربيز الخاص بك -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    <div class="logo-container">
+        <div class="shield-icon">🛡️</div>
+        <h2>أمان</h2>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBjI4Mi_jSfBjF9ASeIYVvr-s8JRwVF-sA",
-            authDomain: "anessecurity.firebaseapp.com",
-            projectId: "anessecurity",
-            storageBucket: "anessecurity.firebasestorage.app",
-            messagingSenderId: "1032536820198",
-            appId: "1:1032536820198:web:81bc852692126af67dee27",
-            measurementId: "G-NC6WE479E1"
-        };
+    <div class="card">
+        <h3>بوابة الدخول الأمنية 🔒</h3>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        <div class="input-group">
+            <input type="text" placeholder="اسم المستخدم أو البريد">
+        </div>
+        <div class="input-group">
+            <input type="password" placeholder="كلمة المرور">
+        </div>
 
-        const registerBtn = document.getElementById('registerBtn');
-        const message = document.getElementById('message');
+        <div class="btn-container">
+            <button class="btn-login" onclick="alert('تم النقر على دخول النظام')">دخول النظام</button>
+        </div>
+    </div>
 
-        registerBtn.addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            if(!email || !password) {
-                message.style.color = '#ef4444';
-                message.innerText = 'الرجاء ملء جميع الخانات!';
-                return;
-            }
-
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    message.style.color = '#22c55e';
-                    message.innerText = 'تم إنشاء الحساب بنجاح! مبروك 🎉';
-                })
-                .error = (error) => {};
-                
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Success
-                })
-                .catch((error) => {
-                    message.style.color = '#ef4444';
-                    message.innerText = 'خطأ: ' + error.message;
-                });
-        });
-    </script>
 </body>
 </html>
