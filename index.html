@@ -1,136 +1,135 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnesSecurity - Hacker Portal</title>
-    <!-- ربط ملف الـ Manifest لتفعيل خاصية التثبيت في كروم -->
-    <link rel="manifest" href="manifest.json">
+    <title>AnesMobile - إنشاء حساب</title>
     <style>
         body {
-            background-color: #0b0f0c;
-            color: #00ff66;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        .cyber-logo-box {
-            background: radial-gradient(circle, rgba(0,255,102,0.1) 0%, rgba(11,15,12,1) 80%);
-            border: 2px solid #00ff66;
-            padding: 15px;
-            border-radius: 20px;
-            margin: 20px auto;
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
-            text-align: center;
-            width: 280px;
-        }
-        .cyber-logo-img {
-            width: 100%;
-            max-width: 240px;
-            height: auto;
+        .card {
+            background-color: #1e293b;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 0 15px #00ff66;
-        }
-        .container {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             width: 100%;
             max-width: 400px;
-            background: #121814;
-            border: 1px solid #00ff66;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        }
+        h2 {
             text-align: center;
+            color: #38bdf8;
+            margin-bottom: 20px;
         }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #000;
-            color: #00ff66;
-            border: 1px solid #00ff66;
-            border-radius: 5px;
-            font-family: 'Courier New', Courier, monospace;
-            box-sizing: border-box;
+        .input-group {
+            margin-bottom: 15px;
         }
-        button:hover {
-            background-color: #00ff66;
-            color: #000;
-            cursor: pointer;
-            box-shadow: 0 0 15px #00ff66;
-        }
-        #install-btn {
-            display: none; /* يظهر فقط لما يكون التطبيق قابلاً للتثبيت */
-            background-color: #00ff66;
-            color: #000;
-            font-weight: bold;
-        }
-        .register-link {
-            margin-top: 15px;
+        label {
+            display: block;
+            margin-bottom: 5px;
             font-size: 14px;
         }
-        .register-link a {
-            color: #00ff66;
-            text-decoration: underline;
-            cursor: pointer;
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
         }
-        .register-link a:hover {
-            text-shadow: 0 0 10px #00ff66;
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #16a34a;
+        }
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <!-- زر التثبيت الخاص بمتصفح كروم -->
-    <button id="install-btn">📥 تثبيت تطبيق AnesSecurity على جهازك</button>
-
-    <div class="cyber-logo-box">
-        <img src="logo.png.jpg" alt="Anes Security Logo" class="cyber-logo-img">
-    </div>
-
-    <div class="container">
-        <h2>🔐 تسجيل الدخول</h2>
-        <input type="text" id="username" placeholder="اسم المستخدم أو البريد">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <button onclick="login()">دخول النظام</button>
-        
-        <div class="register-link">
-            ليس لديك حساب؟ <a onclick="registerAccount()">إنشاء حساب جديد</a>
+    <div class="card">
+        <h2>إنشاء حساب جديد</h2>
+        <div class="input-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="email" placeholder="example@gmail.com">
         </div>
+        <div class="input-group">
+            <label>كلمة المرور</label>
+            <input type="password" id="password" placeholder="********">
+        </div>
+        <button id="registerBtn">تسجيل حساب</button>
+        <p id="message"></p>
     </div>
 
-    <script>
-        // كود تفعيل زر التثبيت في جوجل كروم (PWA)
-        let deferredPrompt;
-        const installBtn = document.getElementById('install-btn');
+    <!-- كود فايربيز الخاص بك -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block';
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjI4Mi_jSfBjF9ASeIYVvr-s8JRwVF-sA",
+            authDomain: "anessecurity.firebaseapp.com",
+            projectId: "anessecurity",
+            storageBucket: "anessecurity.firebasestorage.app",
+            messagingSenderId: "1032536820198",
+            appId: "1:1032536820198:web:81bc852692126af67dee27",
+            measurementId: "G-NC6WE479E1"
+        };
 
-            installBtn.addEventListener('click', () => {
-                installBtn.style.display = 'none';
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('المستخدم ثبت التطبيق');
-                    }
-                    deferredPrompt = null;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const registerBtn = document.getElementById('registerBtn');
+        const message = document.getElementById('message');
+
+        registerBtn.addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if(!email || !password) {
+                message.style.color = '#ef4444';
+                message.innerText = 'الرجاء ملء جميع الخانات!';
+                return;
+            }
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    message.style.color = '#22c55e';
+                    message.innerText = 'تم إنشاء الحساب بنجاح! مبروك 🎉';
+                })
+                .error = (error) => {};
+                
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Success
+                })
+                .catch((error) => {
+                    message.style.color = '#ef4444';
+                    message.innerText = 'خطأ: ' + error.message;
                 });
-            });
         });
-
-        function login() {
-            alert("تم إرسال بيانات الدخول بنجاح إلى نظام أمان!");
-        }
-
-        function registerAccount() {
-            alert("خاصية إنشاء حساب جديد قيد التطوير في نظام أمان!");
-        }
     </script>
 </body>
 </html>
