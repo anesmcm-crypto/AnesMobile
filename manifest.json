@@ -1,0 +1,15 @@
+{
+  "name": "AnesSecurity Portal",
+  "short_name": "AnesSecurity",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f0c",
+  "theme_color": "#00ff66",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/ios-filled/512/00ff66/security-checked.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

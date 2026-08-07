@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnesSecurity - Hacker Portal</title>
+    <!-- ربط ملف الـ Manifest لتفعيل خاصية التثبيت في كروم -->
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            background-color: #0b0f0c;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cyber-logo-box {
+            background: radial-gradient(circle, rgba(0,255,102,0.1) 0%, rgba(11,15,12,1) 80%);
+            border: 2px solid #00ff66;
+            padding: 25px;
+            border-radius: 20px;
+            margin: 20px auto;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
+            text-align: center;
+            width: 250px;
+        }
+        .cyber-shield-icon {
+            font-size: 50px;
+            text-shadow: 0 0 20px #00ff66;
+        }
+        .cyber-shield-word {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px #00ff66;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #121814;
+            border: 1px solid #00ff66;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #000;
+            color: #00ff66;
+            border: 1px solid #00ff66;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            box-sizing: border-box;
+        }
+        button:hover {
+            background-color: #00ff66;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00ff66;
+        }
+        #install-btn {
+            display: none; /* يظهر فقط لما يكون التطبيق قابلاً للتثبيت */
+            background-color: #00ff66;
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- زر التثبيت الخاص بمتصفح كروم -->
+    <button id="install-btn">📥 تثبيت تطبيق AnesSecurity على جهازك</button>
+
+    <div class="cyber-logo-box">
+        <div class="cyber-shield-icon">🛡️</div>
+        <div class="cyber-shield-word">أمان</div>
+    </div>
+
+    <div class="container">
+        <h2>🔐 تسجيل الدخول</h2>
+        <input type="text" id="username" placeholder="اسم المستخدم أو البريد">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <button onclick="login()">دخول النظام</button>
+    </div>
+
+    <script>
+        // كود تفعيل زر التثبيت في جوجل كروم (PWA)
+        let deferredPrompt;
+        const installBtn = document.getElementById('install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+
+            installBtn.addEventListener('click', () => {
+                installBtn.style.display = 'none';
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('المستخدم ثبت التطبيق');
+                    }
+                    deferredPrompt = null;
+                });
+            });
+        });
+
+        function login() {
+            alert("تم إرسال بيانات الدخول بنجاح إلى نظام أمان!");
+        }
+    </script>
+</body>
+</html>
