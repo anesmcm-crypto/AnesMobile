@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -20,24 +21,19 @@
         .cyber-logo-box {
             background: radial-gradient(circle, rgba(0,255,102,0.1) 0%, rgba(11,15,12,1) 80%);
             border: 2px solid #00ff66;
-            padding: 25px;
+            padding: 15px;
             border-radius: 20px;
             margin: 20px auto;
             box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
             text-align: center;
-            width: 250px;
+            width: 280px;
         }
-        .cyber-shield-icon {
-            font-size: 50px;
-            text-shadow: 0 0 20px #00ff66;
-        }
-        .cyber-shield-word {
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 4px;
-            margin-top: 10px;
-            text-transform: uppercase;
-            text-shadow: 0 0 15px #00ff66;
+        .cyber-logo-img {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 15px #00ff66;
         }
         .container {
             width: 100%;
@@ -47,6 +43,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+            text-align: center;
         }
         input, button {
             width: 100%;
@@ -71,6 +68,18 @@
             color: #000;
             font-weight: bold;
         }
+        .register-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .register-link a {
+            color: #00ff66;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .register-link a:hover {
+            text-shadow: 0 0 10px #00ff66;
+        }
     </style>
 </head>
 <body>
@@ -79,8 +88,7 @@
     <button id="install-btn">📥 تثبيت تطبيق AnesSecurity على جهازك</button>
 
     <div class="cyber-logo-box">
-        <div class="cyber-shield-icon">🛡️</div>
-        <div class="cyber-shield-word">أمان</div>
+        <img src="logo.png.jpg" alt="Anes Security Logo" class="cyber-logo-img">
     </div>
 
     <div class="container">
@@ -88,6 +96,10 @@
         <input type="text" id="username" placeholder="اسم المستخدم أو البريد">
         <input type="password" id="password" placeholder="كلمة المرور">
         <button onclick="login()">دخول النظام</button>
+        
+        <div class="register-link">
+            ليس لديك حساب؟ <a onclick="registerAccount()">إنشاء حساب جديد</a>
+        </div>
     </div>
 
     <script>
@@ -115,4 +127,10 @@
         function login() {
             alert("تم إرسال بيانات الدخول بنجاح إلى نظام أمان!");
         }
+
+        function registerAccount() {
+            alert("خاصية إنشاء حساب جديد قيد التطوير في نظام أمان!");
+        }
     </script>
+</body>
+</html>
