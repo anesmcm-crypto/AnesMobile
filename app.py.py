@@ -10,7 +10,7 @@ import base64
 # إعدادات الصفحة
 st.set_page_config(page_title="AnesSecurity - Hacker Portal", page_icon="🛡️", layout="centered")
 
-# --- كود الـ CSS الكامل والمعدل لإظهار الدرع فقط داخل الدائرة ---
+# --- كود الـ CSS المحسن لقص الخلفية وجعلها دائرية متوهجة ---
 st.markdown("""
     <style>
     /* إخفاء عناصر Streamlit */
@@ -24,13 +24,11 @@ st.markdown("""
     
     .cyber-logo-box { display: flex; align-items: center; justify-content: center; margin: 10px auto 20px auto; }
     
-    /* تكبير الصورة وقص الأطراف لإظهار الدرع فقط داخل الدائرة المتوهجة */
+    /* جعل الصورة دائرية بقص الأطراف وتوهجها لإنهاء مشكلة المربع */
     .cyber-logo-img {
         width: 190px;
         height: 190px;
         object-fit: cover;
-        object-position: center;
-        transform: scale(1.6);
         border-radius: 50%;
         border: 2px solid #00ff66;
         box-shadow: 0 0 20px #00ff66, inset 0 0 15px #00ff66;
@@ -38,9 +36,9 @@ st.markdown("""
     }
 
     @keyframes pulse {
-        0% { transform: scale(1.6); box-shadow: 0 0 15px #00ff66; }
-        50% { transform: scale(1.68); box-shadow: 0 0 30px #00ff66; }
-        100% { transform: scale(1.6); box-shadow: 0 0 15px #00ff66; }
+        0% { transform: scale(1); box-shadow: 0 0 15px #00ff66; }
+        50% { transform: scale(1.03); box-shadow: 0 0 30px #00ff66; }
+        100% { transform: scale(1); box-shadow: 0 0 15px #00ff66; }
     }
 
     .stButton>button { background-color: #000000 !important; color: #00ff66 !important; border: 2px solid #00ff66 !important; border-radius: 8px; font-weight: bold; width: 100%; transition: all 0.3s ease; }
@@ -67,7 +65,7 @@ if "logged_in" not in st.session_state: st.session_state.logged_in = False
 if "username" not in st.session_state: st.session_state.username = ""
 users_db = load_users()
 
-# عرض الشعار الدائري
+# عرض الشعار بالشكل الدائري الجديد
 try:
     with open("logo.png", "rb") as image_file:
         encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
