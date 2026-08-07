@@ -6,11 +6,12 @@ import requests
 import random
 import string
 import base64
+from PIL import Image
 
 # إعدادات الصفحة مع طابع الهاكرز
 st.set_page_config(page_title="AnesSecurity - Hacker Portal", page_icon="🛡️", layout="centered")
 
-# --- حقن تصميم الـ CSS (إخفاء أزرار Streamlit وعمل طابع الهاكرز) ---
+# --- حقن تصميم الـ CSS وتأثير التوهج والشعار الشفاف ---
 st.markdown("""
     <style>
     /* إخفاء أيقونات وقائمة Streamlit العائمة */
@@ -38,43 +39,27 @@ st.markdown("""
         color: #c0c0c0 !important;
     }
     
-    /* تصميم لوجو الدرع فقط في المنتصف */
+    /* تصميم حاضنة الشعار في المنتصف بدون خلفية مربعة */
     .cyber-logo-box {
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: radial-gradient(circle, rgba(0,255,102,0.1) 0%, rgba(11,15,12,1) 80%);
-        border: 2px solid #00ff66;
-        padding: 30px;
-        border-radius: 20px;
         margin: 20px auto 30px auto;
-        box-shadow: 0 0 25px rgba(0, 255, 102, 0.3);
-        width: fit-content;
+        padding: 10px;
     }
     
-    .cyber-shield-icon {
-        font-size: 70px;
-        color: #00ff66;
-        text-shadow: 0 0 20px #00ff66;
+    /* تأثير التوهج والشفافية للدرع فقط */
+    .cyber-logo-img {
+        width: 190px;
+        height: auto;
+        filter: drop-shadow(0 0 15px #00ff66) drop-shadow(0 0 30px #00ff66);
         animation: pulse 2s infinite;
-    }
-    
-    .cyber-shield-word {
-        font-size: 28px;
-        font-weight: bold;
-        color: #00ff66;
-        letter-spacing: 4px;
-        font-family: 'Courier New', Courier, monospace;
-        margin-top: 12px;
-        text-transform: uppercase;
-        text-shadow: 0 0 15px #00ff66;
     }
 
     @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
+        0% { transform: scale(1); opacity: 0.85; }
+        50% { transform: scale(1.04); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.85; }
     }
 
     /* تخصيص أزرار الهاكرز الخضراء */
@@ -129,13 +114,23 @@ if "username" not in st.session_state:
 
 users_db = load_users()
 
-# --- عرض لوجو الدرع لوحده في المنتصف مع كلمة أمان ---
-st.markdown("""
-    <div class="cyber-logo-box">
-        <div class="cyber-shield-icon">🛡️</div>
-        <div class="cyber-shield-word">أمان</div>
-    </div>
-""", unsafe_allow_html=True)
+# --- عرض الشعار بدون خلفية ومتوهج في المنتصف ---
+try:
+    with open("logo.png", "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
+    
+    st.markdown(f"""
+        <div class="cyber-logo-box">
+            <img src="data:image/png;base64,{encoded_image}" class="cyber-logo-img" alt="AnesSecurity Logo">
+        </div>
+    """, unsafe_allow_html=True)
+except FileNotFoundError:
+    st.markdown("""
+        <div class="cyber-logo-box">
+            <div style="font-size: 70px; color: #00ff66; text-shadow: 0 0 20px #00ff66;">🛡️</div>
+        </div>
+    """, unsafe_allow_html=True)
+    st.warning("⚠️ ملف الشعار (logo.png) غير موجود في المجلد. يرجى رفعه.")
 
 # --- إذا لم يكن المستخدم مسجلاً الدخول ---
 if not st.session_state.logged_in:
@@ -307,7 +302,6 @@ else:
     # --- القسم 5: ترسانة الأدوات والمولدات المتقدمة ---
     with st.expander("⚡ ترسانة الأدوات والمولدات الأمنية الإضافية"):
         
-        # أداة كشف الروابط المختصرة (فحص إعادة التوجيه)
         st.subheader("🔗 كشف الروابط المختصرة (Redirect Checker)")
         short_url = st.text_input("أدخل الرابط المختصر (مثل bit.ly/...):")
         if st.button("كشف الوجهة الحقيقية"):
@@ -323,7 +317,6 @@ else:
                 st.warning("الرجاء إدخال رابط مختصر أولاً.")
 
         st.divider()
-        # أداة توليد بيانات وهمية آمنة
         st.subheader("👤 مولد الهوية والبيانات الوهمية")
         if st.button("توليد بيانات شخصية وهمية"):
             fake_names = ["Anes Hacker", "CyberGhost", "Matrix_99", "Ghost_X", "Phantom_07"]
@@ -336,7 +329,6 @@ else:
             st.write(f"- **كلمة المرور المقترحة:** `{r_pass}`")
 
         st.divider()
-        # أداة تشفير وفك تشفير النصوص السريعة (Base64)
         st.subheader("🔐 تشفير وفك تشفير النصوص السريعة (Base64)")
         text_to_codec = st.text_area("اكتب النص المراد تشفيره أو فكه:")
         col_c1, col_c2 = st.columns(2)
